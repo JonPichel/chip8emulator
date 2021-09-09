@@ -13,6 +13,7 @@
 #include "memory_window.h"
 #include "registers_window.h"
 #include "stack_window.h"
+#include "timers_window.h"
 
 #define WHITECHAR '#'
 #define BLACKCHAR ' '
@@ -56,6 +57,7 @@ int main(void) {
     memory_setup_window();
     registers_setup_window();
     stack_setup_window();
+    timers_setup_window();
 
     // Cursor options
     cbreak();                       // Disable line buffering
@@ -65,7 +67,8 @@ int main(void) {
     keypad(gamewin, true);          // Allow arrow keys etc.
 
     chip8_init();
-    if ((chip8_loadrom("/home/jonathanpc/Programming/C/chip8emulator/roms/demos/Particle Demo [zeroZshadow, 2008].ch8")) == -1) {
+    if ((chip8_loadrom("/home/jonathanpc/Programming/C/chip8emulator/roms/games/Pong (1 player).ch8")) == -1) {
+    //if ((chip8_loadrom("/home/jonathanpc/Programming/C/chip8emulator/roms/demos/Particle Demo [zeroZshadow, 2008].ch8")) == -1) {
     //if ((chip8_loadrom("/home/jonathanpc/Programming/C/chip8emulator/roms/demos/Maze [David Winter, 199x].ch8")) == -1) {
         endwin();
         perror("Loading ROM file");
@@ -75,10 +78,11 @@ int main(void) {
     running = true;
     while(running) {
         // Update debug windows
-        if (true) {
+        if (debug_mode || true) {
             memory_display();
             registers_display();
             stack_display();
+            timers_display();
         }
 
         // Get input
