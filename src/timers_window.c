@@ -14,7 +14,7 @@ extern uint8_t sound_timer;
 WINDOW *timewin;
 
 void timers_setup_window(void) {
-    timewin = newwin(TIMEWIN_HEIGHT, TIMEWIN_WIDTH, REGWIN_HEIGHT, SCR_WIDTH + MEMWIN_WIDTH + STACKWIN_WIDTH);
+    timewin = newwin(TIMEWIN_HEIGHT, TIMEWIN_WIDTH, REGWIN_HEIGHT + STACKWIN_HEIGHT, SCR_WIDTH + MEMWIN_WIDTH);
     box(timewin, 0, 0);
     wrefresh(timewin);
 }

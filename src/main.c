@@ -14,11 +14,15 @@
 #include "registers_window.h"
 #include "stack_window.h"
 #include "timers_window.h"
+#include "keypad_window.h"
 
 #define WHITECHAR '#'
 #define BLACKCHAR ' '
 
-#define CLOCK_MS 17
+#define CPU_SPEED_HZ    500
+#define TIMER_SPEED_HZ  60
+#define CPU_US          1000000 / CPU_SPEED_HZ
+#define TIMER_US        1000000 / TIMER_SPEED_HZ
 
 /* Peripheral ports defined in chip8vm.c */
 extern uint8_t key[NUM_KEYS];
@@ -42,9 +46,9 @@ void draw(void) {
 
 int main(void) {
     chtype c;
-    struct timespec current_time, last_time;
+    struct timespec current_time, cpu_last_time, timer_last_time;
     bool running, step;
-    int diff_ms;
+    int diff_us;
     
     // Initialise ncurses
     initscr();
@@ -58,6 +62,7 @@ int main(void) {
     registers_setup_window();
     stack_setup_window();
     timers_setup_window();
+    keypad_setup_window();
 
     // Cursor options
     cbreak();                       // Disable line buffering
@@ -74,7 +79,8 @@ int main(void) {
         perror("Loading ROM file");
         exit(EXIT_FAILURE);
     }
-    clock_gettime(CLOCK_MONOTONIC, &last_time);
+    clock_gettime(CLOCK_MONOTONIC, &cpu_last_time);
+    clock_gettime(CLOCK_MONOTONIC, &timer_last_time);
     running = true;
     while(running) {
         // Update debug windows
@@ -83,6 +89,7 @@ int main(void) {
             registers_display();
             stack_display();
             timers_display();
+            keypad_display();
         }
 
         // Get input
@@ -160,12 +167,17 @@ int main(void) {
         }
 
         // Process instruction
-        if (chip8_cycle() == -1) {
-            running = false;
-            info_message("Unknown instruction!");
+
+        clock_gettime(CLOCK_MONOTONIC, &current_time);
+        diff_us = (current_time.tv_sec - cpu_last_time.tv_sec) * 1000000 + (current_time.tv_nsec - cpu_last_time.tv_nsec) / 1000;
+        if (diff_us >= CPU_US) {
+            cpu_last_time = current_time;
+            if (chip8_cycle() == -1) {
+                running = false;
+                info_message("Unknown instruction!");
+            }
         }
             
-        
         // Draw if needed
         if (chip8_draw_flag) {
             draw();
@@ -173,11 +185,10 @@ int main(void) {
         }
         
         // Update timers if needed
-        clock_gettime(CLOCK_MONOTONIC, &current_time);
-        diff_ms = (current_time.tv_sec - last_time.tv_sec) * 1000 + (current_time.tv_nsec - last_time.tv_nsec) / 1000;
-        if (diff_ms >= CLOCK_MS) {
+        diff_us = (current_time.tv_sec - timer_last_time.tv_sec) * 1000000 + (current_time.tv_nsec - timer_last_time.tv_nsec) / 1000;
+        if (diff_us >= TIMER_US) {
             chip8_tick();
-            last_time = current_time;
+            timer_last_time = current_time;
         }
         
         // TODO: Make a beep noise if sound_timer > 0

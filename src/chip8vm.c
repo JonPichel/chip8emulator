@@ -91,7 +91,7 @@ uint8_t draw_sprite(uint8_t vx, uint8_t vy, uint8_t n) {
     for (y = 0; y < n; y++) { 
         pixel_row = memory[I + y];
         for (x = 0; x < 8; x++) {
-            if (x < SCR_WIDTH && y < SCR_HEIGHT) {
+            if ((vx + x) < SCR_WIDTH && (vy + y) < SCR_HEIGHT) {
                 flipped_set |= gfx[gfx_base + y * SCR_WIDTH + x] & (pixel_row >> (7 - x)) & 0x01;
                 gfx[gfx_base + y * SCR_WIDTH + x] ^= (pixel_row >> (7 - x)) & 0x01;
             }
@@ -325,7 +325,7 @@ int chip8_cycle(void) {
                 case 0x29:
                     // FX29: Set I to the location of the sprite for the character in VX
                     // Characters 0-F (in hexadecimal) are represented by a 4x5 font
-                    I = ((opcode & 0x0F00) >> 8) * 5;
+                    I = V[x] * 5;
                     break;
                 case 0x33:
                     // FX33: Store the BCD representation of VX at I, with MSD at address I and LSD at address I+2
