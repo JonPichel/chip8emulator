@@ -273,8 +273,10 @@ int chip8_cycle(void) {
             switch (opcode & 0x00FF) {
                 case 0x9E:
                     // EX9E: Skip the next instruction if the key stored in VX is pressed
-                    if (key_index < NUM_KEYS && key[key_index])
+                    if (key_index < NUM_KEYS && key[key_index]) {
                         pc += 4;
+                        key[key_index] = 0;
+                    }
                     else
                         pc += 2;
                     break;
@@ -282,8 +284,10 @@ int chip8_cycle(void) {
                     // EXA1: Skip the next instruction if the key stored in VX is not pressed
                     if (key_index < NUM_KEYS && !key[key_index])
                         pc += 4;
-                    else
+                    else {
                         pc += 2;
+                        key[key_index] = 0;
+                    }
                     break;
                 default:
                     return -1;

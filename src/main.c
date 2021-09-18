@@ -93,58 +93,106 @@ int main(void) {
         }
 
         // Get input
-        memset(key, 0, sizeof(uint8_t) * NUM_KEYS);
+        //memset(key, 0, sizeof(uint8_t) * NUM_KEYS);
         step = false;
         while (!step && (c = wgetch(gamewin)) != ERR) {
             info_message("Pressed key: %c", c);
             switch(c) {
                 case '0':
-                    key[0x0] = 1;
+                    if (debug_mode)
+                        key[0x0] = !key[0x0];
+                    else
+                        key[0x0] = 1;
                     break;
                 case '1':
-                    key[0x1] = 1;
+                    if (debug_mode)
+                        key[0x1] = !key[0x1];
+                    else
+                        key[0x1] = 1;
                     break;
                 case '2':
-                    key[0x2] = 1;
+                    if (debug_mode)
+                        key[0x2] = !key[0x2];
+                    else
+                        key[0x2] = 1;
                     break;
                 case '3':
-                    key[0x3] = 1;
+                    if (debug_mode)
+                        key[0x3] = !key[0x3];
+                    else
+                        key[0x3] = 1;
                     break;
                 case '4':
-                    key[0x4] = 1;
+                    if (debug_mode)
+                        key[0x4] = !key[0x4];
+                    else
+                        key[0x4] = 1;
                     break;
                 case '5':
-                    key[0x5] = 1;
+                    if (debug_mode)
+                        key[0x5] = !key[0x5];
+                    else
+                        key[0x5] = 1;
                     break;
                 case '6':
-                    key[0x6] = 1;
+                    if (debug_mode)
+                        key[0x6] = !key[0x6];
+                    else
+                        key[0x6] = 1;
                     break;
                 case '7':
-                    key[0x7] = 1;
+                    if (debug_mode)
+                        key[0x7] = !key[0x7];
+                    else
+                        key[0x7] = 1;
                     break;
                 case '8':
-                    key[0x8] = 1;
+                    if (debug_mode)
+                        key[0x8] = !key[0x8];
+                    else
+                        key[0x8] = 1;
                     break;
                 case '9':
-                    key[0x9] = 1;
+                    if (debug_mode)
+                        key[0x9] = !key[0x9];
+                    else
+                        key[0x9] = 1;
                     break;
                 case 'q':
-                    key[0xA] = 1;
+                    if (debug_mode)
+                        key[0xA] = !key[0xA];
+                    else
+                        key[0xA] = 1;
                     break;
                 case 'w':
-                    key[0xB] = 1;
+                    if (debug_mode)
+                        key[0xB] = !key[0xB];
+                    else
+                        key[0xB] = 1;
                     break;
                 case 'e':
-                    key[0xC] = 1;
+                    if (debug_mode)
+                        key[0xC] = !key[0xC];
+                    else
+                        key[0xC] = 1;
                     break;
                 case 'r':
-                    key[0xD] = 1;
+                    if (debug_mode)
+                        key[0xD] = !key[0xD];
+                    else
+                        key[0xD] = 1;
                     break;
                 case 't':
-                    key[0xE] = 1;
+                    if (debug_mode)
+                        key[0xE] = !key[0xE];
+                    else
+                        key[0xE] = 1;
                     break;
                 case 'y':
-                    key[0xF] = 1;
+                    if (debug_mode)
+                        key[0xF] = !key[0xF];
+                    else
+                        key[0xF] = 1;
                     break;
                 case 'd':
                     // Toggle debug mode
@@ -164,6 +212,8 @@ int main(void) {
                     memory_down();
                     break;
             }
+            // Update keypad screen
+            keypad_display();
         }
 
         // Process instruction

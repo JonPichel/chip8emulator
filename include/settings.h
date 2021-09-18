@@ -3,9 +3,10 @@
 
 #include <curses.h>
 
-#define PC_PAIR 1
-#define I_PAIR  2
-#define SP_PAIR 3
+#define PC_PAIR  1
+#define I_PAIR   2
+#define SP_PAIR  3
+#define KEY_PAIR 4
 
 #define PC_FG   COLOR_RED
 #define PC_BG   COLOR_BLACK
@@ -15,6 +16,9 @@
 
 #define SP_FG   COLOR_RED
 #define SP_BG   COLOR_BLACK
+
+#define KEY_FG  COLOR_RED
+#define KEY_BG  COLOR_WHITE
 
 void settings_init(void);
 
