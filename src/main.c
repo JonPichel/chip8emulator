@@ -9,6 +9,7 @@
 
 #include "chip8vm.h"
 #include "settings.h"
+#include "selection_screen.h"
 #include "info_window.h"
 #include "memory_window.h"
 #include "registers_window.h"
@@ -45,15 +46,23 @@ void draw(void) {
 }
 
 int main(void) {
-    chtype c;
+    char *selected_rom;
     struct timespec current_time, cpu_last_time, timer_last_time;
     bool running, step;
     int diff_us;
+    chtype c;
     
     // Initialise ncurses
     initscr();
     start_color();
     settings_init();
+
+    cbreak();                       // Disable line buffering
+    noecho();                       // Don't echo characters
+    curs_set(0);                    // Make cursor invisible
+    keypad(stdscr, true);
+
+    selected_rom = select_rom();
 
     // Create windows
     gamewin = newwin(SCR_HEIGHT, SCR_WIDTH, 0, 0);
@@ -65,20 +74,19 @@ int main(void) {
     keypad_setup_window();
 
     // Cursor options
-    cbreak();                       // Disable line buffering
-    noecho();                       // Don't echo characters
-    curs_set(0);                    // Make cursor invisible
     nodelay(gamewin, !debug_mode);  // false -> blocking, true -> non-blocking
     keypad(gamewin, true);          // Allow arrow keys etc.
 
     chip8_init();
-    if ((chip8_loadrom("/home/jonathanpc/Programming/C/chip8emulator/roms/games/Pong (1 player).ch8")) == -1) {
+    if (chip8_loadrom(selected_rom) == -1) {
+    //if ((chip8_loadrom("/home/jonathanpc/Programming/C/chip8emulator/roms/games/Pong (1 player).ch8")) == -1) {
     //if ((chip8_loadrom("/home/jonathanpc/Programming/C/chip8emulator/roms/demos/Particle Demo [zeroZshadow, 2008].ch8")) == -1) {
     //if ((chip8_loadrom("/home/jonathanpc/Programming/C/chip8emulator/roms/demos/Maze [David Winter, 199x].ch8")) == -1) {
         endwin();
         perror("Loading ROM file");
         exit(EXIT_FAILURE);
     }
+
     clock_gettime(CLOCK_MONOTONIC, &cpu_last_time);
     clock_gettime(CLOCK_MONOTONIC, &timer_last_time);
     running = true;

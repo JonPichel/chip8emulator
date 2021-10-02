@@ -20,6 +20,8 @@
 #define KEY_FG  COLOR_RED
 #define KEY_BG  COLOR_WHITE
 
+#define ROM_DIR "../roms"
+
 void settings_init(void);
 
 #endif /* ___CHIP8_SETTINGS_H__ */

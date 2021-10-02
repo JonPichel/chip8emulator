@@ -118,6 +118,7 @@ int chip8_cycle(void) {
                     // 00E0: Clear the screen
                     memset(gfx, 0, sizeof(uint8_t) * GFX_SIZE);
                     chip8_draw_flag = true;
+                    pc += 2;
                     break;
                 case 0x0EE:
                     // 00EE: Return from a subroutine
